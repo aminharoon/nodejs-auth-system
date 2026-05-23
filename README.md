@@ -34,7 +34,7 @@ Secure authentication system built with Node.js, Express.js, MongoDB, JWT, and O
 ## Installation
 
 ```bash
-git clone <https://github.com/aminharoon/nodejs-auth-system.git>
+git clone https://github.com/aminharoon/nodejs-auth-system.git
 cd nodejs-auth-system
 npm install
 ```
