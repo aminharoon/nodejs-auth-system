@@ -58,10 +58,10 @@ userSchema.pre("save", async function () {
     this.password = await bcryptjs.hash(this.password, 10)
 })
 
-userSchema.methods.comparePassword = async (password) => {
+userSchema.methods.comparePassword = async function (password) {
 
     const result = await bcryptjs.compare(password, this.password)
-    console.log(result)
+
     return result;
 }
 
@@ -71,11 +71,11 @@ userSchema.methods.compareOtp = async function (enteredOtp) {
 
 
 userSchema.methods.generateAccessToken = function () {
-    return jwt.sign({ id: this._id }, config.ACCESS_TOKEN, { expiresIn: '1h' });
+    return jwt.sign({ _id: this._id }, config.ACCESS_TOKEN, { expiresIn: '1h' });
 }
 
 userSchema.methods.generateRefreshToken = function () {
-    return jwt.sign({ id: this._id }, config.REFRESH_TOKEN, { expiresIn: '7d' });
+    return jwt.sign({ _id: this._id }, config.REFRESH_TOKEN, { expiresIn: '7d' });
 }
 
 

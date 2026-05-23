@@ -1,6 +1,7 @@
 import express from 'express';
 import { authController } from '../controller/auth.controller.js';
 import { validateRegister } from '../validation/auth.validator.js';
+import { verifyUser } from '../middleware/auth.middleware.js';
 
 
 const authRouter = express.Router();
@@ -32,5 +33,19 @@ authRouter.post("/resendOtp", authController.resendOtp);
  * @access Public
  */
 authRouter.post("/login", authController.login);
+
+/**
+ * @route POST /api/auth/forgetPassword
+ * @desc Forget password for a user
+ * @access Private
+ */
+authRouter.post("/forgetPassword", verifyUser, authController.forgetPassword);
+
+/**
+ * @route POST /api/auth/changePassword
+ * @desc Change password for a user
+ * @access Private
+ */
+authRouter.post("/changePassword", verifyUser, authController.changePassword);
 
 export default authRouter;

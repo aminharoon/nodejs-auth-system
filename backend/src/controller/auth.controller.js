@@ -6,6 +6,8 @@ import { generateOtp } from "../utils/generateOtp.js";
 import { optHtml, loginHtml, verifyHtml } from "../template/index.js";
 import asyncHandler from '../utils/asyncHandler.js';
 import userModel from "../models/user.model.js";
+import { generateAccessAndRefreshToken } from "../utils/generateAccessAndrefreshToken.js";
+
 
 
 
@@ -84,6 +86,8 @@ const login = asyncHandler(async (req, res) => {
         throw new ApiError(400, false, "Please verify your account  before logging in");
     }
 
+
+
     const isPasswordValid = await user.comparePassword(password);
 
     if (!isPasswordValid) {
@@ -109,8 +113,10 @@ const resendOtp = asyncHandler(async (req, res) => {
 
     const otp = generateOtp();
     await sendMail(email, "Resend OTP", `Your new OTP is ${otp}. It will expire in 10 minutes.`);
-    await updateUser({ email }, "otp", otp);
-    await updateUser({ email }, "expiresAt", new Date(Date.now() + 10 * 60 * 1000));
+
+    user.otp = otp;
+    user.expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+    await user.save();
 
 
     res.status(200).json(new ApiResponse(200, true, "OTP resent successfully", user));
@@ -118,14 +124,16 @@ const resendOtp = asyncHandler(async (req, res) => {
 
 const forgetPassword = asyncHandler(async (req, res) => {
     const { password, confirmPassword } = req.body;
-
+    console.log(password, confirmPassword)
     if (password !== confirmPassword) {
         throw new ApiError(400, false, "Password and confirm password do not match");
     }
 
-    const user = await userModel.findById(req.user._id)
+    const user = await userModel.findById(req.user.id)
+
     user.password = password
     await user.save()
+    await sendMail(user.email, "Password Reset Successful", "Your password has been successfully reset. If you did not initiate this change, please contact support immediately.");
     res.status(200).json(new ApiResponse(200, true, "Password Changed successfully ", user))
 
 
@@ -137,7 +145,7 @@ const changePassword = asyncHandler(async (req, res) => {
         throw new ApiError(400, false, "confirm password doe't match ")
     }
 
-    const user = await userModel.findById(req.user._id);
+    const user = await userModel.findById(req.user.id);
     const isPasswordValid = await user.comparePassword(currentPassword);
 
     if (!isPasswordValid) {
@@ -145,6 +153,7 @@ const changePassword = asyncHandler(async (req, res) => {
     }
     user.password = newPassword;
     await user.save();
+    await sendMail(user.email, "Password Changed", "Your password has been successfully changed. If you did not initiate this change, please contact support immediately.");
     res.status(200).json(new ApiResponse(200, true, "Password changed successfully", user));
 
 })
