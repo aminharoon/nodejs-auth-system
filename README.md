@@ -1,15 +1,24 @@
-# Node.js Auth System
+# Node.js Authentication System
 
-Authentication system built with Node.js, Express, MongoDB, and JWT.
+Secure authentication system built with Node.js, Express.js, MongoDB, JWT, and OTP email verification.
+
+---
 
 ## Features
 
 - User Registration
 - Email OTP Verification
 - Resend OTP
+- User Login
 - JWT Authentication
+- Access & Refresh Tokens
+- HTTP Only Cookie Authentication
+- Forgot Password
+- Change Password
 - MongoDB Database
 - Nodemailer Email Service
+
+---
 
 ## Tech Stack
 
@@ -20,6 +29,8 @@ Authentication system built with Node.js, Express, MongoDB, and JWT.
 - JWT
 - Nodemailer
 
+---
+
 ## Installation
 
 ```bash
@@ -28,9 +39,11 @@ cd nodejs-auth-system
 npm install
 ```
 
+---
+
 ## Environment Variables
 
-Create a `.env` file:
+Create a `.env` file in the root directory:
 
 ```env
 PORT=5000
@@ -38,6 +51,7 @@ PORT=5000
 MONGO_URI=
 
 JWT_SECRET=
+JWT_REFRESH_SECRET=
 
 EMAIL_USER=
 
@@ -46,11 +60,23 @@ GOOGLE_CLIENT_SECRET=
 GOOGLE_REFRESH_TOKEN=
 ```
 
+---
+
 ## Run Server
+
+Development mode:
 
 ```bash
 npm run dev
 ```
+
+Production mode:
+
+```bash
+npm start
+```
+
+---
 
 ## API Endpoints
 
@@ -72,13 +98,58 @@ POST /api/auth/verify-email
 POST /api/auth/resend-otp
 ```
 
+### Login User
+
+```http
+POST /api/auth/login
+```
+
+### Forgot Password
+
+```http
+POST /api/auth/forget-password
+```
+
+### Change Password
+
+```http
+POST /api/auth/change-password
+```
+
+---
+
+## Authentication Flow
+
+1. User registers
+2. OTP sent to email
+3. User verifies OTP
+4. User logs in
+5. Access & Refresh tokens generated
+6. Tokens stored in HTTP-only cookies
+
+---
+
+## Security Features
+
+- Password Hashing
+- JWT Authentication
+- HTTP-only Cookies
+- OTP Expiration
+- Protected Password Change
+- Email Verification
+
+---
+
 ## Upcoming Features
 
-- Login
-- Forgot Password
-- Reset Password
-- Refresh Token
-- Protected Routes
+- Google OAuth
+- Refresh Token Rotation
+- Rate Limiting
+- Two Factor Authentication (2FA)
+- Docker Deployment
+- Role Based Authorization
+
+---
 
 ## Author
 
