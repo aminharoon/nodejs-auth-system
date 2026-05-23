@@ -22,12 +22,13 @@ transporter.verify((error, success) => {
 })
 
 
-export const sendMail = async (to, subject, text) => {
+export const sendMail = async (to, subject, text, html) => {
     const mailOptions = {
         from: config.EMAIL_USER,
         to,
         subject,
-        text
+        text,
+        html
     }
     try {
         const response = await transporter.sendMail(mailOptions);
